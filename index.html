@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sudoku Tools - Killer Cage Calculator</title>
+    <script src="alpine.js" defer></script>
+    <script defer data-domain="sudoku-tools.com" src="https://stats.m11n.de/js/script.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="favicon.ico">
+    <link rel="icon" type="image/png" href="favicon.png">
+</head>
+
+<body class="">
+    <div class="lg:w-3/4 2xl:w-1/2 mx-auto" x-data="killercage">
+
+        <h1 class="m-3 p-3 bg-slate-100 text-center text-2xl text-pink-600 font-bold -rotate-1 md:-rotate-[0.5deg] border-dashed border-2 border-slate-700 relative">
+            Killer Cage Calculator &amp; Sudoku&nbsp;Sums
+            <span x-text="randomSum" class="absolute top-0 left-[2px] text-base text-slate-700 font-normal"></span>
+        </h1>
+
+        <p class="px-3 my-4 text-sm">Please select size of Killer Cage to show all possible combinations. Certain digits can be excluded afterwards.</p>
+
+        <h2 class="px-3 mb-3 text-lg">Size of Killer Cage / Number of Digits</h2>
+        <div class="w-full px-3 flex flex-row justify-between gap-1 md:gap-2 mb-3">
+            <template x-for="digit in digits">
+                <div class="basis-1/9 grow shrink-0 py-2 px-2 text-xl text-center text-slate-700 border border-pink-500 rounded cursor-pointer hover:bg-pink-400 hover:text-white" @click="selected = digit" :class="buttonClassSelected(digit)" x-text="digit"></div>
+            </template>
+        </div>
+
+        <h2 class="px-3 mb-3 text-lg">Allowed Digits</h2>
+        <div class="w-full px-3 flex flex-row justify-between gap-1 md:gap-2 mb-3">
+            <template x-for="digit in digits">
+                <div class="basis-1/9 grow shrink-0 py-2 px-2 text-xl text-center text-slate-700 border border-pink-400 rounded cursor-pointer hover:bg-pink-200" @click="allowed[digit] = !allowed[digit]" :class="buttonClassAllowed(digit)" x-text="digit"></div>
+            </template>
+        </div>
+
+        <h2 class="px-3 mb-3 text-lg">Possible Combinations</h2>
+
+        <p class="px-3 mb-3 text-sm" x-show="selected == 0"><span class="bg-yellow-200">Please select size of Killer Cage with buttons above.</span></p>
+
+        <div class="px-3 mb-3 overflow-x-scroll text-sm">
+            <template x-for="(digitGroups, sum) in combinations">
+                <div class="flex gap-2 mb-1">
+                    <span class="basis-6 shrink-0 text-right font-bold text-pink-700" x-text="sum"></span>
+                    <span class="border-b">
+                        <template x-for="digits in digitGroups">
+                            <span class="mr-3 hover:bg-pink-200 select-all" x-text="digits.join('')"></span>
+                        </template>
+                    </span>
+                </div>
+            </template>
+            </ul>
+        </div>
+
+        <footer class="flex align-middle justify-center py-3 text-xs bg-slate-700 text-slate-100">
+            <div>
+                <a class="hover:underline" href="impressum.html">Impressum</a> &centerdot; <a class="hover:underline" href="datenschutz.html">Datenschutz</a>
+            </div>
+        </footer>
+        <script>
+            function getCombinations(sum, digits) {
+                const results = [];
+
+                function findCombinations(remainingSum, index, combination) {
+                    if (remainingSum === 0) {
+                        results.push(combination);
+                        return;
+                    }
+
+                    for (let i = index; i < digits.length; i++) {
+                        const digit = digits[i];
+                        if (digit > remainingSum) {
+                            break;
+                        }
+                        if (combination.includes(digit)) {
+                            continue;
+                        }
+                        findCombinations(remainingSum - digit, i, [...combination, digit]);
+                    }
+
+                }
+
+                findCombinations(sum, 0, []);
+
+                return results;
+            }
+
+            function filterCombinations(combinations, numberOfDigits) {
+                return combinations.filter(combination => combination.length === numberOfDigits);
+            }
+
+            document.addEventListener('alpine:init', () => {
+                Alpine.data('killercage', () => ({
+                    randomSum: Math.floor(Math.random() * 45) + 1,
+                    digits: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+                    selected: 0,
+                    allowed: {
+                        1: true,
+                        2: true,
+                        3: true,
+                        4: true,
+                        5: true,
+                        6: true,
+                        7: true,
+                        8: true,
+                        9: true,
+                    },
+                    buttonClassSelected(number) {
+                        return {
+                            'bg-pink-300': this.selected == number
+                        }
+                    },
+                    buttonClassAllowed(number) {
+                        return {
+                            'bg-pink-300': this.allowed[number] === true
+                        }
+                    },
+                    getAllowedDigits() {
+                        let allowedDigits = [];
+                        for (let idx in this.allowed) {
+                            if (this.allowed[idx]) {
+                                allowedDigits.push(parseInt(idx));
+                            }
+                        }
+
+                        return allowedDigits;
+                    },
+                    combinations() {
+                        let result = {};
+                        const digits = this.getAllowedDigits();
+
+                        for (let sum = 1; sum <= 45; sum++) {
+                            let combinations = getCombinations(sum, digits);
+                            combinations = filterCombinations(combinations, this.selected);
+                            if (combinations.length > 0) {
+                                result[sum] = combinations;
+                            }
+                        }
+
+                        return result;
+                    }
+                }))
+            })
+        </script>
+</body>
+
+</html>
