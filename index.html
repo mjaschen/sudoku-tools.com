@@ -5,20 +5,28 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Sudoku Tools - Killer Cage Calculator</title>
+    <meta name="description" content="Calculate all possible combinations for Killer Cages and Region Sums - exclude digits if needed!"/>
+    <meta property="og:url" content="https://sudoku-tools.com"/>
+    <meta property="og:title" content="Sudoku Tools - Killer Cage and Region Sums Calculator"/>
+    <meta property="og:description" content="Calculate all possible combinations for Killer Cages and Region Sums - exclude digits if needed!" />
+    <meta property="og:image" content="https://sudoku-tools.com/screenshot.jpg"/>
+    <meta property="og:image:url"  content="https://sudoku-tools.com/screenshot.jpg"/>
+    <meta property="twitter:image" content="https://sudoku-tools.com/screenshot.jpg"/>
+
     <script src="alpine.js" defer></script>
     <script defer data-domain="sudoku-tools.com" src="https://stats.m11n.de/js/script.js"></script>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="favicon.ico">
     <link rel="icon" type="image/png" href="favicon.png">
 </head>
-
 <body class="">
     <div class="lg:w-3/4 2xl:w-1/2 mx-auto" x-data="killercage">
 
         <h1 class="m-3 p-3 bg-slate-100 text-center text-2xl text-pink-600 font-bold -rotate-1 md:-rotate-[0.5deg] border-dashed border-2 border-slate-700 relative">
             Killer Cage Calculator &amp; Sudoku&nbsp;Sums
-            <span x-text="randomSum" class="absolute top-0 left-[2px] text-base text-slate-700 font-normal"></span>
+            <span x-text="randomSum" class="absolute top-[-3px] left-[2px] text-base text-slate-700 font-normal"></span>
         </h1>
 
         <p class="px-3 my-4 text-sm">Please select size of Killer Cage to show all possible combinations. Certain digits can be excluded afterwards.</p>
@@ -41,13 +49,13 @@
 
         <p class="px-3 mb-3 text-sm" x-show="selected == 0"><span class="bg-yellow-200">Please select size of Killer Cage with buttons above.</span></p>
 
-        <div class="px-3 mb-3 overflow-x-scroll text-sm">
+        <div class="px-3 mb-6 overflow-x-scroll text-sm">
             <template x-for="(digitGroups, sum) in combinations">
                 <div class="flex gap-2 mb-1">
                     <span class="basis-6 shrink-0 text-right font-bold text-pink-700" x-text="sum"></span>
                     <span class="border-b">
                         <template x-for="digits in digitGroups">
-                            <span class="mr-3 hover:bg-pink-200 select-all" x-text="digits.join('')"></span>
+                            <span class="mr-3 hover:bg-pink-200 tracking-wide select-all" x-text="digits.join('')"></span>
                         </template>
                     </span>
                 </div>
