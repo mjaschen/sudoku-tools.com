@@ -45,6 +45,17 @@
             </template>
         </div>
 
+        <h2 class="px-3 mb-3 text-lg">Required Digits</h2>
+        <div class="px-3 mb-2 flex flex-wrap text-sm gap-1">
+            <div class="block cursor-pointer border-pink-400 px-1 rounded border" :class="requiredOperator === 'AND' && 'bg-pink-300'" @click="requiredOperator = 'AND'">all of selected digits</div>
+            <div class="block cursor-pointer border-pink-400 px-1 rounded border" :class="requiredOperator === 'OR' && 'bg-pink-300'" @click="requiredOperator = 'OR'">at least one of selected digits</div>
+        </div>
+        <div class="w-full px-3 flex flex-row justify-between gap-1 md:gap-2 mb-3">
+            <template x-for="digit in digits">
+                <div class="basis-1/9 grow shrink-0 py-2 px-2 text-xl text-center text-slate-700 border border-pink-400 rounded cursor-pointer hover:bg-pink-200" @click="required[digit] = !required[digit]" :class="buttonClassRequired(digit)" x-text="digit"></div>
+            </template>
+        </div>
+
         <h2 class="px-3 mb-3 text-lg">Possible Combinations</h2>
 
         <p class="px-3 mb-3 text-sm" x-show="selected == 0"><span class="bg-yellow-200">Please select size of Killer Cage with buttons above.</span></p>
@@ -100,6 +111,14 @@
                 return combinations.filter(combination => combination.length === numberOfDigits);
             }
 
+            function applyRequiredDigits(combinations, requiredDigits, operator) {
+                if (operator === 'AND') {
+                    return combinations.filter(combination => requiredDigits.every(digit => combination.includes(digit)));
+                }
+
+                return combinations.filter(combination => requiredDigits.some(digit => combination.includes(digit)));
+            }
+
             document.addEventListener('alpine:init', () => {
                 Alpine.data('killercage', () => ({
                     randomSum: Math.floor(Math.random() * 45) + 1,
@@ -116,6 +135,18 @@
                         8: true,
                         9: true,
                     },
+                    required: {
+                        1: false,
+                        2: false,
+                        3: false,
+                        4: false,
+                        5: false,
+                        6: false,
+                        7: false,
+                        8: false,
+                        9: false,
+                    },
+                    requiredOperator: 'AND', // 'OR'
                     buttonClassSelected(number) {
                         return {
                             'bg-pink-300': this.selected == number
@@ -124,6 +155,11 @@
                     buttonClassAllowed(number) {
                         return {
                             'bg-pink-300': this.allowed[number] === true
+                        }
+                    },
+                    buttonClassRequired(number) {
+                        return {
+                            'bg-pink-300': this.required[number] === true
                         }
                     },
                     getAllowedDigits() {
@@ -136,12 +172,25 @@
 
                         return allowedDigits;
                     },
+                    getRequiredDigits() {
+                        let requiredDigits = [];
+                        for (let idx in this.required) {
+                            if (this.required[idx]) {
+                                requiredDigits.push(parseInt(idx));
+                            }
+                        }
+
+                        return requiredDigits;
+                    },
                     combinations() {
                         let result = {};
-                        const digits = this.getAllowedDigits();
-
+                        const allowedDigits = this.getAllowedDigits();
+                        const requiredDigits = this.getRequiredDigits();
                         for (let sum = 1; sum <= 45; sum++) {
-                            let combinations = getCombinations(sum, digits);
+                            let combinations = getCombinations(sum, allowedDigits);
+                            if (requiredDigits.length > 0) {
+                                combinations = applyRequiredDigits(combinations, requiredDigits, this.requiredOperator);
+                            }
                             combinations = filterCombinations(combinations, this.selected);
                             if (combinations.length > 0) {
                                 result[sum] = combinations;
