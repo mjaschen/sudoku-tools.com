@@ -31,29 +31,36 @@
 
         <p class="px-3 my-4 text-sm">Please select size of Killer Cage to show all possible combinations. Certain digits can be excluded or marked as required afterwards.</p>
 
-        <h2 class="px-3 mb-3 text-lg">Size of Killer Cage / Number of Digits</h2>
-        <div class="w-full px-3 flex flex-row justify-between gap-1 md:gap-2 mb-3">
-            <template x-for="digit in digits">
-                <div class="basis-1/9 grow shrink-0 py-2 px-2 text-xl text-center text-slate-700 border border-pink-500 rounded cursor-pointer hover:bg-pink-400 hover:text-white" @click="selected = digit" :class="buttonClassSelected(digit)" x-text="digit"></div>
-            </template>
+        <div class="mb-6">
+            <h2 class="px-3 mb-3 text-lg">Size of Killer Cage / Number of Digits</h2>
+            <div class="w-full px-3 flex flex-row justify-between gap-1 md:gap-2 mb-3">
+                <template x-for="digit in digits">
+                    <div class="basis-1/9 grow shrink-0 py-2 px-2 text-xl text-center text-slate-700 border border-pink-500 rounded cursor-pointer hover:bg-pink-400 hover:text-white" @click="selected = digit" :class="buttonClassSelected(digit)" x-text="digit"></div>
+                </template>
+            </div>
         </div>
 
-        <h2 class="px-3 mb-3 text-lg">Allowed Digits</h2>
-        <div class="w-full px-3 flex flex-row justify-between gap-1 md:gap-2 mb-3">
-            <template x-for="digit in digits">
-                <div class="basis-1/9 grow shrink-0 py-2 px-2 text-xl text-center text-slate-700 border border-pink-400 rounded cursor-pointer hover:bg-pink-200" @click="allowed[digit] = !allowed[digit]" :class="buttonClassAllowed(digit)" x-text="digit"></div>
-            </template>
-        </div>
-
-        <h2 class="px-3 mb-3 text-lg">Required Digits</h2>
-        <div class="px-3 mb-2 flex flex-wrap text-sm gap-1">
-            <div class="block cursor-pointer border-pink-400 px-1 rounded border" :class="requiredOperator === 'AND' && 'bg-pink-300'" @click="requiredOperator = 'AND'">all of selected digits</div>
-            <div class="block cursor-pointer border-pink-400 px-1 rounded border" :class="requiredOperator === 'OR' && 'bg-pink-300'" @click="requiredOperator = 'OR'">at least one of selected digits</div>
-        </div>
-        <div class="w-full px-3 flex flex-row justify-between gap-1 md:gap-2 mb-3">
-            <template x-for="digit in digits">
-                <div class="basis-1/9 grow shrink-0 py-2 px-2 text-xl text-center text-slate-700 border border-pink-400 rounded cursor-pointer hover:bg-pink-200" @click="required[digit] = !required[digit]" :class="buttonClassRequired(digit)" x-text="digit"></div>
-            </template>
+        <div class="flex flex-row flex-wrap mb-6">
+            <div class="basis-full sm:basis-1/2">
+                <h2 class="px-3 mb-3 text-lg">Allowed Digits</h2>
+                <div class="w-full px-3 flex flex-row justify-between gap-1 md:gap-2 mb-3">
+                    <template x-for="digit in digits">
+                        <div class="basis-1/9 grow shrink-0 py-2 px-2 text-xl text-center text-slate-700 border border-pink-400 rounded cursor-pointer hover:bg-pink-200" @click="allowed[digit] = !allowed[digit]" :class="buttonClassAllowed(digit)" x-text="digit"></div>
+                    </template>
+                </div>
+            </div>
+            <div class="basis-full sm:basis-1/2">
+                <h2 class="px-3 mb-3 text-lg">Required Digits</h2>
+                <div class="w-full px-3 flex flex-row justify-between gap-1 md:gap-2 mb-3">
+                    <template x-for="digit in digits">
+                        <div class="basis-1/9 grow shrink-0 py-2 px-2 text-xl text-center text-slate-700 border border-pink-400 rounded cursor-pointer hover:bg-pink-200" @click="required[digit] = !required[digit]" :class="buttonClassRequired(digit)" x-text="digit"></div>
+                    </template>
+                </div>
+                <div class="px-3 mb-2 flex flex-wrap text-sm gap-1">
+                    <div class="block cursor-pointer border-pink-400 px-1 rounded border" :class="requiredOperator === 'AND' && 'bg-pink-300'" @click="requiredOperator = 'AND'">all of selected digits</div>
+                    <div class="block cursor-pointer border-pink-400 px-1 rounded border" :class="requiredOperator === 'OR' && 'bg-pink-300'" @click="requiredOperator = 'OR'">at least one of selected digits</div>
+                </div>
+            </div>
         </div>
 
         <h2 class="px-3 mb-3 text-lg">Possible Combinations</h2>
