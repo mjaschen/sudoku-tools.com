@@ -25,11 +25,11 @@
     <div class="mx-auto lg:w-3/4 2xl:w-1/2" x-data="killercage">
 
         <h1 class="m-3 p-3 bg-slate-100 text-center text-2xl text-pink-600 font-bold -rotate-1 md:-rotate-[0.5deg] border-dashed border-2 border-slate-700 relative">
-            Killer Cage Calculator &amp; Sudoku&nbsp;Sums
+            6x6 — Killer Cage Calculator &amp; Sudoku&nbsp;Sums
             <span x-text="randomSum" class="absolute top-[-3px] left-[2px] text-base text-slate-700 font-normal"></span>
         </h1>
 
-        <p class="px-3 my-4 text-sm">Please select size of Killer Cage to show all possible combinations. Certain digits can be excluded or marked as required afterwards. ➡️ <a class="underline" href="/6x6-sums.html">Calculator for 6x6 Sudokus</a></p></p>
+        <p class="px-3 my-4 text-sm">Please select size of Killer Cage to show all possible combinations. Certain digits can be excluded or marked as required afterwards. ➡️ <a class="underline" href="/">Calculator for 9x9 Sudokus</a></p>
 
         <div class="mb-6">
             <h2 class="px-3 mb-3 text-lg">Size of Killer Cage / Number of Digits</h2>
@@ -128,8 +128,8 @@
 
             document.addEventListener('alpine:init', () => {
                 Alpine.data('killercage', () => ({
-                    randomSum: Math.floor(Math.random() * 45) + 1,
-                    digits: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+                    randomSum: Math.floor(Math.random() * 21) + 1,
+                    digits: [1, 2, 3, 4, 5, 6],
                     selected: 0,
                     allowed: {
                         1: true,
@@ -138,9 +138,6 @@
                         4: true,
                         5: true,
                         6: true,
-                        7: true,
-                        8: true,
-                        9: true,
                     },
                     required: {
                         1: false,
@@ -149,9 +146,6 @@
                         4: false,
                         5: false,
                         6: false,
-                        7: false,
-                        8: false,
-                        9: false,
                     },
                     requiredOperator: 'AND', // 'OR'
                     buttonClassSelected(number) {
@@ -193,7 +187,7 @@
                         let result = {};
                         const allowedDigits = this.getAllowedDigits();
                         const requiredDigits = this.getRequiredDigits();
-                        for (let sum = 1; sum <= 45; sum++) {
+                        for (let sum = 1; sum <= 21; sum++) {
                             let combinations = getCombinations(sum, allowedDigits);
                             if (requiredDigits.length > 0) {
                                 combinations = applyRequiredDigits(combinations, requiredDigits, this.requiredOperator);
