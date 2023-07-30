@@ -4,6 +4,8 @@ This is a simple webapp for helping you solve sudoku puzzles. It is a work in pr
 
 Open the tool: [sudoku-tools.com](https://sudoku-tools.com/)
 
+![sudoku-tools.com iPad Screenshot with split-screen](https://static.marcusjaschen.de/dump/images/sudoku-tools-ipad_20230730_164802.jpg)
+
 ## Features
 
 ### Killer Cage Combinations
