@@ -6,7 +6,7 @@ watch:
 
 .PHONY: deploy
 deploy: favicon.ico style.css
-	scp *.html *.{jpg,png,ico} alpine.js style.css $(DEPLOY_TARGET)
+	rsync *.html *.{jpg,png,ico} alpine.js style.css $(DEPLOY_TARGET)
 
 style.css: source.css
 	npx tailwindcss -i source.css -o style.css
