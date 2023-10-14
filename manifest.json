@@ -1,0 +1,16 @@
+{
+    "background-color": "#ffffff",
+    "description": "Calculate all combinations for Killer Cages and Region Sums - exclude digits if needed! 9x9 and 6x6 Sudoku.",
+    "display": "standalone",
+    "icons": [
+        {
+            "src": "/app-icon.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "name": "Sudoku Tools",
+    "short_name": "Sudoku Tools",
+    "start_url": "https://sudoku-tools.com",
+    "theme_color": "#db2777"
+}
