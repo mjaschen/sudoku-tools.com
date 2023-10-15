@@ -1,12 +1,10 @@
-DEPLOY_TARGET=sudoku-tools:public_html/
-
 .PHONY: watch
 watch:
 	npx tailwindcss -i source.css -o style.css --watch
 
 .PHONY: deploy
 deploy: favicon.ico style.css
-	rsync *.html *.{jpg,png,ico} alpine.js style.css $(DEPLOY_TARGET)
+	scp *.html *.jpg *.png *.ico alpine.js main.js manifest.json service-worker.js style.css sudoku-tools:public_html/
 
 style.css: source.css
 	npx tailwindcss -i source.css -o style.css
