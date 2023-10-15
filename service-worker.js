@@ -2,7 +2,6 @@ const cacheName = "cache-v1";
 const precacheResources = [
     "/",
     "/index.html",
-    "/6x6-sums.html",
     "/alpine.js",
     "/main.js",
     "/style.css",
