@@ -59,9 +59,9 @@
 
         <div class="mb-6">
             <h2 class="px-3 mb-3 text-lg">Size of Killer Cage / Number of Digits</h2>
-            <div class="flex flex-row justify-between w-full gap-1 px-3 mb-3 md:gap-2">
+            <div class="grid justify-between w-full gap-1 px-3 mb-3 md:gap-2" :class="sudokuType == 6 ? 'grid-cols-6' : 'grid-cols-9'">
                 <template x-for="digit in digits">
-                    <div class="px-2 py-2 text-xl text-center border border-pink-600 rounded-xl md:rounded-full cursor-pointer basis-1/9 grow shrink-0 text-slate-700 hover:bg-pink-400 hover:text-white" @click="cageSize = digit" :class="buttonClassCageSize(digit)" x-text="digit"></div>
+                    <div class="px-2 py-2 text-xl text-center border border-pink-600 rounded-xl md:rounded-full cursor-pointer basis-1/9 grow shrink-0 text-slate-700 hover:bg-pink-400 hover:text-white" @click="setCageSize(digit)" :class="buttonClassCageSize(digit)" x-text="digit"></div>
                 </template>
             </div>
         </div>
@@ -113,16 +113,35 @@
 
         <div class="px-3 mb-6 overflow-x-scroll text-sm">
             <template x-for="(digitGroups, sum) in combinations">
-                <div class="flex gap-2 mb-1">
-                    <span class="font-bold text-right text-pink-700 basis-6 shrink-0" x-text="sum"></span>
-                    <span class="border-b">
+                <div class="flex gap-2 mb-1" x-show="zoomedSum === null || zoomedSum == sum">
+                    <span
+                        class="font-bold text-right text-pink-700 basis-6 shrink-0 underline decoration-dotted"
+                        :class="zoomedSum == sum ? 'text-2xl leading-8 cursor-zoom-out' : 'cursor-zoom-in'"
+                        x-text="sum" x-on:click="zoom(sum)"></span>
+                    <span :class="zoomedSum == sum ? '' : 'border-b'">
                         <template x-for="digits in digitGroups">
-                            <span class="mr-3 tracking-wide select-all hover:bg-pink-200" x-text="digits.join('')"></span>
+                            <span
+                                :class="{
+                                    'mr-3 whitespace-nowrap hover:bg-pink-200 cursor-pointer' : true,
+                                    'block text-lg' : zoomedSum == sum,
+                                    'line-through text-slate-400' : hiddenCombinations.includes(digits.join('')),
+                                }"
+                                x-on:click="strikeCombination(digits.join(''))"
+                                x-text="digits.join('&hairsp;')"
+                                ></span>
                         </template>
                     </span>
                 </div>
             </template>
-            </ul>
+            <p class="mt-4">
+                <button
+                    class="rounded-full bg-indigo-600 px-2.5 py-1 text-xs font-semibold text-white
+                    shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2
+                    focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                    x-show="zoomedSum !== null"
+                    x-on:click="zoom(null)"
+                    >Show all combinations</button>
+            </p>
         </div>
 
         <footer class="flex justify-center py-3 text-xs align-middle bg-slate-700 text-slate-100">
@@ -175,8 +194,10 @@
                     sudokuType: 9,
                     secretSum: 45,
                     digits: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+                    zoomedSum: null,
                     randomSum: Math.floor(Math.random() * 45) + 1,
                     cageSize: 0,
+                    hiddenCombinations: [],
                     allowed: {
                         1: true,
                         2: true,
@@ -280,6 +301,21 @@
                             'bg-pink-300': this.required[number] === true
                         }
                     },
+                    strikeCombination(combination) {
+                        if (this.hiddenCombinations.includes(combination)) {
+                            this.hiddenCombinations = this.hiddenCombinations.filter(item => item !== combination);
+                            return;
+                        }
+                        this.hiddenCombinations.push(combination);
+                    },
+                    zoom(sum) {
+                        if (this.zoomedSum === sum) {
+                            this.zoomedSum = null;
+                            return;
+                        }
+
+                        this.zoomedSum = sum;
+                    },
                     getAllowedDigits() {
                         let allowedDigits = [];
                         for (let idx in this.allowed) {
@@ -300,6 +336,13 @@
 
                         return requiredDigits;
                     },
+                    setCageSize(size) {
+                        if (size == this.cageSize) {
+                            return;
+                        }
+                        this.zoomedSum = null;
+                        this.cageSize = size;
+                    },
                     combinations() {
                         let result = {};
                         const allowedDigits = this.getAllowedDigits();
@@ -318,6 +361,9 @@
                         return result;
                     },
                     resetSelection() {
+                        this.zoomedSum = null;
+                        this.hiddenCombinations = [];
+
                         this.cageSize = 0;
                         for (let idx in this.allowed) {
                             this.allowed[idx] = true;
