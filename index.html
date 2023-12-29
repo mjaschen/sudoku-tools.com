@@ -366,10 +366,14 @@
 
                         this.cageSize = 0;
                         for (let idx in this.allowed) {
-                            this.allowed[idx] = true;
+                            if (this.allowed.hasOwnProperty(idx)) {
+                                this.allowed[idx] = true;
+                            }
                         }
                         for (let idx in this.required) {
-                            this.required[idx] = false;
+                            if (this.required.hasOwnProperty(idx)) {
+                                this.required[idx] = false;
+                            }
                         }
                     },
                 }))
