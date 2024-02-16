@@ -1,261 +1,215 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Sudoku Tools - Killer Cage / Region Sums Calculator</title>
+        <meta name="description" content="Calculate all combinations for Killer Cages and Region Sums - exclude digits if needed! 9x9 and 6x6 Sudoku" />
+        <meta property="og:url" content="https://sudoku-tools.com" />
+        <meta property="og:title" content="Sudoku Tools - Killer Cage and Region Sums Calculator" />
+        <meta property="og:description" content="Calculate all possible combinations for Killer Cages and Region Sums - exclude digits if needed! Supports 9x9 and 6x6 Sudoku." />
+        <meta property="og:image" content="https://sudoku-tools.com/screenshot.jpg" />
+        <meta property="og:image:url" content="https://sudoku-tools.com/screenshot.jpg" />
+        <meta property="twitter:image" content="https://sudoku-tools.com/screenshot.jpg" />
 
-    <title>Sudoku Tools - Killer Cage / Region Sums Calculator</title>
-    <meta name="description" content="Calculate all combinations for Killer Cages and Region Sums - exclude digits if needed! 9x9 and 6x6 Sudoku"/>
-    <meta property="og:url" content="https://sudoku-tools.com"/>
-    <meta property="og:title" content="Sudoku Tools - Killer Cage and Region Sums Calculator"/>
-    <meta property="og:description" content="Calculate all possible combinations for Killer Cages and Region Sums - exclude digits if needed! Supports 9x9 and 6x6 Sudoku." />
-    <meta property="og:image" content="https://sudoku-tools.com/screenshot.jpg"/>
-    <meta property="og:image:url"  content="https://sudoku-tools.com/screenshot.jpg"/>
-    <meta property="twitter:image" content="https://sudoku-tools.com/screenshot.jpg"/>
+        <script src="alpine.js" defer></script>
+        <script src="main.js" defer></script>
+        <script defer data-domain="sudoku-tools.com" src="https://stats.m11n.de/js/script.js"></script>
+        <link rel="stylesheet" href="style.css" />
 
-    <script src="alpine.js" defer></script>
-    <script src="main.js" defer></script>
-    <script defer data-domain="sudoku-tools.com" src="https://stats.m11n.de/js/script.js"></script>
-    <link rel="stylesheet" href="style.css">
+        <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png" />
+        <link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png" />
+        <link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png" />
+        <link rel="icon" type="image/png" sizes="192x192" href="/android-icon-192x192.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        <link rel="manifest" href="manifest.json" />
+        <meta name="msapplication-TileColor" content="#db2777" />
+        <meta name="msapplication-TileImage" content="/ms-icon-144x144.png" />
+        <meta name="theme-color" content="#db2777" />
+    </head>
+    <body class="">
+        <div class="mx-auto lg:w-3/4 2xl:w-1/2" x-data="killercage">
+            <h1 class="m-3 p-3 bg-slate-100 text-center text-2xl text-pink-600 font-bold -rotate-1 md:-rotate-[0.5deg] border-dashed border-2 border-slate-700 relative">
+                Killer Cage Calculator &amp; Sudoku&nbsp;Region&nbsp;Sums
+                <span x-text="randomSum" class="absolute top-[-3px] left-[2px] text-base text-slate-700 font-normal"></span>
+            </h1>
 
-    <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
-    <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
-    <link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
-    <link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="manifest.json" />
-    <meta name="msapplication-TileColor" content="#db2777">
-    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
-    <meta name="theme-color" content="#db2777">
-</head>
-<body class="">
-    <div class="mx-auto lg:w-3/4 2xl:w-1/2" x-data="killercage">
+            <p class="px-3 my-4 text-sm">Please select Killer Cage or Region Sum size to view all possible combinations. Certain digits can be excluded or marked as required.</p>
 
-        <h1 class="m-3 p-3 bg-slate-100 text-center text-2xl text-pink-600 font-bold -rotate-1 md:-rotate-[0.5deg] border-dashed border-2 border-slate-700 relative">
-            Killer Cage Calculator &amp; Sudoku&nbsp;Region&nbsp;Sums
-            <span x-text="randomSum" class="absolute top-[-3px] left-[2px] text-base text-slate-700 font-normal"></span>
-        </h1>
-
-        <p class="px-3 my-4 text-sm">Please select Killer Cage or Region Sum size to view all possible combinations. Certain digits can be excluded or marked as required..</p>
-
-        <div class="mb-6">
-            <div class="px-3">
-                <span class="isolate inline-flex rounded-md shadow-sm">
-                    <button type="button" x-on:click="type(9)" class="relative inline-flex items-center rounded-l-md px-12 py-2 text-sm font-semibold ring-1 ring-pink-300 ring-inset hover:bg-gray-50 focus:z-10" :class="buttonClassType(9)">9x9</button>
-                    <button type="button" x-on:click="type(6)" class="relative -ml-px inline-flex items-center rounded-r-md px-12 py-2 text-sm font-semibold ring-1 ring-pink-300 ring-inset hover:bg-gray-50 focus:z-10" :class="buttonClassType(6)">6x6</button>
-                  </span>
+            <div class="mb-6">
+                <h2 class="px-3 mb-3 text-lg">Sudoku Type</h2>
+                <div class="px-3">
+                    <span class="isolate inline-flex rounded-md shadow-sm">
+                        <button type="button" x-on:click="type(9)" class="relative inline-flex items-center rounded-l-md px-12 py-2 text-sm font-semibold ring-1 ring-pink-300 ring-inset hover:bg-gray-50 focus:z-10" :class="buttonClassType(9)">9x9</button>
+                        <button type="button" x-on:click="type(6)" class="relative -ml-px inline-flex items-center rounded-r-md px-12 py-2 text-sm font-semibold ring-1 ring-pink-300 ring-inset hover:bg-gray-50 focus:z-10" :class="buttonClassType(6)">6x6</button>
+                    </span>
+                </div>
             </div>
-        </div>
 
-        <div class="mb-6">
-            <h2 class="px-3 mb-3 text-lg">Size of Killer Cage / Number of Digits</h2>
-            <div class="grid justify-between w-full gap-1 px-3 mb-3 md:gap-2" :class="sudokuType == 6 ? 'grid-cols-6' : 'grid-cols-9'">
-                <template x-for="digit in digits">
-                    <div class="px-2 py-2 text-xl text-center border border-pink-600 rounded-xl md:rounded-full cursor-pointer basis-1/9 grow shrink-0 text-slate-700 hover:bg-pink-400 hover:text-white" @click="setCageSize(digit)" :class="buttonClassCageSize(digit)" x-text="digit"></div>
-                </template>
-            </div>
-        </div>
-
-        <div class="flex flex-row flex-wrap mb-6">
-            <div class="basis-full sm:basis-1/2">
-                <h2 class="px-3 mb-3 text-lg">Allowed Digits</h2>
-                <div class="flex flex-row justify-between w-full gap-1 px-3 mb-3 md:gap-2">
+            <div class="mb-6">
+                <h2 class="px-3 mb-3 text-lg">Size of Killer Cage or Region Sum Segment </h2>
+                <div class="grid justify-between w-full gap-1 px-3 mb-3 md:gap-2" :class="sudokuType == 6 ? 'grid-cols-6' : 'grid-cols-9'">
                     <template x-for="digit in digits">
-                        <div class="px-2 py-2 text-xl text-center border border-pink-400 rounded-xl cursor-pointer basis-1/9 grow shrink-0 text-slate-700 hover:bg-pink-200" @click="allowed[digit] = !allowed[digit]" :class="buttonClassAllowed(digit)" x-text="digit"></div>
+                        <div class="px-2 py-2 text-xl text-center border-2 border-pink-600 rounded-xl md:rounded-full cursor-pointer basis-1/9 grow shrink-0 text-slate-700 font-bold font-mono hover:bg-pink-400 hover:text-white" @click="setCageSize(digit)" :class="buttonClassCageSize(digit)" x-text="digit"></div>
                     </template>
                 </div>
             </div>
-            <div class="basis-full sm:basis-1/2">
-                <h2 class="px-3 mb-3 text-lg">Required Digits</h2>
-                <div class="flex flex-row justify-between w-full gap-1 px-3 mb-3 md:gap-2">
-                    <template x-for="digit in digits">
-                        <div class="px-2 py-2 text-xl text-center border border-pink-400 rounded-xl cursor-pointer basis-1/9 grow shrink-0 text-slate-700 hover:bg-pink-200" @click="required[digit] = !required[digit]" :class="buttonClassRequired(digit)" x-text="digit"></div>
-                    </template>
+
+            <div class="flex flex-row flex-wrap mb-6">
+                <div class="basis-full sm:basis-1/2">
+                    <h2 class="px-3 mb-3 text-lg">Allowed Digits</h2>
+                    <div class="flex flex-row justify-between w-full gap-1 px-3 mb-3 md:gap-2">
+                        <template x-for="digit in digits">
+                            <div class="px-2 py-2 text-xl text-center border-2 rounded-xl select-none cursor-pointer basis-1/9 grow shrink-0 font-mono font-bold" @click="toggleAllowedDigit(digit)" :class="buttonClassAllowed(digit)" x-text="digit"></div>
+                        </template>
+                    </div>
                 </div>
-                <div class="flex justify-end gap-1 px-3 mb-2 text-sm flex-nowrap">
-                    <div class="block cursor-pointer border-pink-400 px-1.5 rounded-full border hover:bg-pink-200" :class="requiredOperator === 'AND' && 'bg-pink-300'" @click="requiredOperator = 'AND'">all of selected</div>
-                    <div class="block cursor-pointer border-pink-400 px-1.5 rounded-full border hover:bg-pink-200" :class="requiredOperator === 'OR' && 'bg-pink-300'" @click="requiredOperator = 'OR'">at least one of selected</div>
+                <div class="basis-full sm:basis-1/2">
+                    <h2 class="px-3 mb-3 text-lg">Required Digits</h2>
+                    <div class="flex flex-row justify-between w-full gap-1 px-3 mb-3 md:gap-2">
+                        <template x-for="digit in digits">
+                            <div class="px-2 py-2 text-xl text-center border-2 rounded-xl select-none cursor-pointer basis-1/9 grow shrink-0 font-mono font-bold" @click="toggleRequiredDigit(digit)" :class="buttonClassRequired(digit)" x-text="digit"></div>
+                        </template>
+                    </div>
+                    <div class="flex justify-end gap-1 px-3 mb-2 text-sm flex-nowrap">
+                        <div class="block cursor-pointer border-pink-400 px-1.5 rounded-full border hover:bg-pink-200" :class="requiredOperator === 'AND' && 'bg-pink-300'" @click="requiredOperator = 'AND'">all of selected</div>
+                        <div class="block cursor-pointer border-pink-400 px-1.5 rounded-full border hover:bg-pink-200" :class="requiredOperator === 'OR' && 'bg-pink-300'" @click="requiredOperator = 'OR'">at least one of selected</div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="flex flex-row justify-between mb-3">
-            <h2 class="pl-3 text-lg">Possible Combinations</h2>
-            <div class="pr-3" x-show="cageSize != 0">
-                <button @click="resetSelection()" type="button" class="rounded-full bg-indigo-600 px-2.5 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Reset</button>
+            <div class="flex flex-row justify-between sm:justify-start mb-3">
+                <h2 class="pl-3 text-lg">Possible Combinations</h2>
+                <div class="pr-3 sm:ml-4" x-show="cageSize != 0">
+                    <button @click="resetSelection()" type="button" class="rounded-full bg-indigo-600 px-2.5 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Start Over</button>
+                </div>
             </div>
-        </div>
 
-        <div x-show="cageSize === 0" class="border-l-4 border-yellow-400 bg-yellow-50 p-4 mx-3">
-            <div class="flex">
-              <div class="flex-shrink-0">
-                <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                  <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
-                </svg>
-              </div>
-              <div class="ml-3">
-                <p class="text-sm text-yellow-700">
-                    Please select size and configuration of Killer Cage or Region Sum with buttons above.
-                </p>
-              </div>
+            <div x-show="cageSize === 0" class="border-l-4 border-yellow-400 bg-yellow-50 p-4 mx-3">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-yellow-700">Please select size and configuration of Killer Cage or Region Sum with buttons above.</p>
+                    </div>
+                </div>
             </div>
-          </div>
 
-        <div class="px-3 mb-6 overflow-x-scroll text-sm">
-            <template x-for="(digitGroups, sum) in combinations">
-                <div class="flex gap-2 mb-1" x-show="zoomedSum === null || zoomedSum == sum">
-                    <span
-                        class="font-bold text-right text-pink-700 basis-6 shrink-0 underline decoration-dotted"
-                        :class="zoomedSum == sum ? 'text-2xl leading-8 cursor-zoom-out' : 'cursor-zoom-in'"
-                        x-text="sum" x-on:click="zoom(sum)"></span>
-                    <span :class="zoomedSum == sum ? '' : 'border-b'">
-                        <template x-for="digits in digitGroups">
-                            <span
-                                :class="{
+            <div class="px-3 mb-6 overflow-x-scroll text-sm">
+                <template x-for="(digitGroups, sum) in combinations">
+                    <div class="flex gap-2 mb-1" x-show="showSum(sum)">
+                        <span class="font-bold text-right text-pink-700 basis-6 shrink-0 underline decoration-dotted" :class="zoomedSum == sum ? 'text-2xl leading-8 cursor-zoom-out' : 'cursor-zoom-in'" x-text="sum" x-on:click="zoom(sum)"></span>
+                        <span :class="zoomedSum == sum ? '' : 'border-b'">
+                            <template x-for="digits in digitGroups">
+                                <span
+                                    :class="{
                                     'mr-3 whitespace-nowrap hover:bg-pink-200 cursor-pointer' : true,
                                     'block text-lg' : zoomedSum == sum,
                                     'line-through text-slate-400' : hiddenCombinations.includes(digits.join('')),
                                 }"
-                                x-on:click="strikeCombination(digits.join(''))"
-                                x-text="digits.join('&hairsp;')"
+                                    x-on:click="strikeCombination(digits.join(''))"
+                                    x-text="digits.join('&hairsp;')"
                                 ></span>
-                        </template>
-                    </span>
-                </div>
-            </template>
-            <p class="mt-4">
-                <button
-                    class="rounded-full bg-indigo-600 px-2.5 py-1 text-xs font-semibold text-white
-                    shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2
-                    focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                    x-show="zoomedSum !== null"
-                    x-on:click="zoom(null)"
-                    >Show all combinations</button>
-            </p>
-        </div>
-
-        <footer class="flex justify-center py-3 text-xs align-middle bg-slate-700 text-slate-100">
-            <div>
-                <a class="hover:underline" href="impressum.html">Imprint</a> &centerdot; <a class="hover:underline" href="datenschutz.html">Privacy</a>
+                            </template>
+                        </span>
+                    </div>
+                </template>
+                <p class="mt-4">
+                    <button class="rounded-full bg-indigo-600 px-2.5 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" x-show="zoomedSum !== null" x-on:click="zoom(null)">Show all combinations</button>
+                </p>
             </div>
-        </footer>
-        <script>
-            function getCombinations(sum, digits) {
-                const results = [];
 
-                function findCombinations(remainingSum, index, combination) {
-                    if (remainingSum === 0) {
-                        results.push(combination);
-                        return;
-                    }
+            <div class="mb-6" x-show="cageSize > 0">
+                <h2 class="px-3 mb-3 text-lg">
+                    Filter by Sum
+                    <button @click="resetFilterSums()" x-show="filterSumMaximumChanged || filterSumMinimumChanged" type="button" class="rounded-full bg-indigo-600 ml-4 px-1.5 py-0.5 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Reset</button>
+                </h2>
 
-                    for (let i = index; i < digits.length; i++) {
-                        const digit = digits[i];
-                        if (digit > remainingSum) {
-                            break;
-                        }
-                        if (combination.includes(digit)) {
-                            continue;
-                        }
-                        findCombinations(remainingSum - digit, i, [...combination, digit]);
-                    }
+                <div class="flex px-3 items-center bg-white gap-4">
+                    <div class="relative w-20">
+                        <label for="filterSumMinimum" class="absolute -top-2 left-2 inline-block bg-white px-1 text-xs font-medium text-gray-900">From</label>
+                        <input type="number" name="filterSumMinimum" x-model.lazy="filterSumMinimum" x-on:change="filterSumMinimumChanged = true" id="filterSumMinimum" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="1" />
+                    </div>
+                    <div class="relative w-20">
+                        <label for="filterSumMaximum" class="absolute -top-2 left-2 inline-block bg-white px-1 text-xs font-medium text-gray-900">To</label>
+                        <input type="number" name="filterSumMaximum" x-model.lazy="filterSumMaximum" x-on:change="filterSumMaximumChanged = true" id="filterSumMaximum" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" :placeholder="secretSum" />
+                    </div>
+                </div>
+            </div>
 
-                }
+            <footer class="flex justify-center py-3 text-xs align-middle bg-slate-700 text-slate-100">
+                <div>
+                    <a class="hover:underline" href="impressum.html">Imprint</a>
+                    &centerdot;
+                    <a class="hover:underline" href="datenschutz.html">Privacy</a>
+                </div>
+            </footer>
+            <script>
+                function getCombinations(sum, digits) {
+                    const results = [];
 
-                findCombinations(sum, 0, []);
-
-                return results;
-            }
-
-            function filterCombinations(combinations, numberOfDigits) {
-                return combinations.filter(combination => combination.length === numberOfDigits);
-            }
-
-            function applyRequiredDigits(combinations, requiredDigits, operator) {
-                if (operator === 'AND') {
-                    return combinations.filter(combination => requiredDigits.every(digit => combination.includes(digit)));
-                }
-
-                return combinations.filter(combination => requiredDigits.some(digit => combination.includes(digit)));
-            }
-
-            document.addEventListener('alpine:init', () => {
-                Alpine.data('killercage', () => ({
-                    sudokuType: 9,
-                    secretSum: 45,
-                    digits: [1, 2, 3, 4, 5, 6, 7, 8, 9],
-                    zoomedSum: null,
-                    randomSum: Math.floor(Math.random() * 45) + 1,
-                    cageSize: 0,
-                    hiddenCombinations: [],
-                    allowed: {
-                        1: true,
-                        2: true,
-                        3: true,
-                        4: true,
-                        5: true,
-                        6: true,
-                        7: true,
-                        8: true,
-                        9: true,
-                    },
-                    required: {
-                        1: false,
-                        2: false,
-                        3: false,
-                        4: false,
-                        5: false,
-                        6: false,
-                        7: false,
-                        8: false,
-                        9: false,
-                    },
-                    requiredOperator: 'AND', // 'OR'
-                    type(type) {
-                        if (this.sudokuType === parseInt(type)) {
+                    function findCombinations(remainingSum, index, combination) {
+                        if (remainingSum === 0) {
+                            results.push(combination);
                             return;
                         }
 
-                        if (type === 6) {
-                            this.sudokuType = 6;
-                            this.digits = [1, 2, 3, 4, 5, 6];
-                            this.secretSum = 21;
-                            this.allowed = {
-                                1: true,
-                                2: true,
-                                3: true,
-                                4: true,
-                                5: true,
-                                6: true,
-                            };
-                            this.required = {
-                                1: false,
-                                2: false,
-                                3: false,
-                                4: false,
-                                5: false,
-                                6: false,
-                            };
-
-                            this.resetSelection();
-
-                            return;
+                        for (let i = index; i < digits.length; i++) {
+                            const digit = digits[i];
+                            if (digit > remainingSum) {
+                                break;
+                            }
+                            if (combination.includes(digit)) {
+                                continue;
+                            }
+                            findCombinations(remainingSum - digit, i, [...combination, digit]);
                         }
+                    }
 
-                        this.sudokuType = 9;
-                        this.digits = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-                        this.secretSum = 45;
-                        this.allowed = {
+                    findCombinations(sum, 0, []);
+
+                    return results;
+                }
+
+                function filterCombinations(combinations, numberOfDigits) {
+                    return combinations.filter((combination) => combination.length === numberOfDigits);
+                }
+
+                function applyRequiredDigits(combinations, requiredDigits, operator) {
+                    if (operator === "AND") {
+                        return combinations.filter((combination) => requiredDigits.every((digit) => combination.includes(digit)));
+                    }
+
+                    return combinations.filter((combination) => requiredDigits.some((digit) => combination.includes(digit)));
+                }
+
+                document.addEventListener("alpine:init", () => {
+                    Alpine.data("killercage", () => ({
+                        sudokuType: 9,
+                        secretSum: 45,
+                        digits: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+                        zoomedSum: null,
+                        filterSumMinimum: 1,
+                        filterSumMinimumChanged: false,
+                        filterSumMaximum: 45,
+                        filterSumMaximumChanged: false,
+                        randomSum: Math.floor(Math.random() * 45) + 1,
+                        cageSize: 4,
+                        hiddenCombinations: [],
+                        allowed: {
                             1: true,
                             2: true,
                             3: true,
@@ -265,8 +219,8 @@
                             7: true,
                             8: true,
                             9: true,
-                        };
-                        this.required = {
+                        },
+                        required: {
                             1: false,
                             2: false,
                             3: false,
@@ -276,111 +230,213 @@
                             7: false,
                             8: false,
                             9: false,
-                        };
+                        },
+                        requiredOperator: "AND", // 'OR'
+                        type(type) {
+                            if (this.sudokuType === parseInt(type)) {
+                                return;
+                            }
 
-                        this.resetSelection();
-                    },
-                    buttonClassType(type) {
-                        return {
-                            'bg-pink-600 hover:bg-pink-600 border-pink-800 text-white': this.sudokuType == type,
-                            'bg-white border-pink-300 text-slate-700': this.sudokuType != type,
-                        }
-                    },
-                    buttonClassCageSize(number) {
-                        return {
-                            'bg-pink-600 border-pink-800 text-white': this.cageSize == number
-                        }
-                    },
-                    buttonClassAllowed(number) {
-                        return {
-                            'bg-pink-300': this.allowed[number] === true
-                        }
-                    },
-                    buttonClassRequired(number) {
-                        return {
-                            'bg-pink-300': this.required[number] === true
-                        }
-                    },
-                    strikeCombination(combination) {
-                        if (this.hiddenCombinations.includes(combination)) {
-                            this.hiddenCombinations = this.hiddenCombinations.filter(item => item !== combination);
-                            return;
-                        }
-                        this.hiddenCombinations.push(combination);
-                    },
-                    zoom(sum) {
-                        if (this.zoomedSum === sum) {
+                            if (type === 6) {
+                                this.sudokuType = 6;
+                                this.digits = [1, 2, 3, 4, 5, 6];
+                                this.secretSum = 21;
+                                this.allowed = {
+                                    1: true,
+                                    2: true,
+                                    3: true,
+                                    4: true,
+                                    5: true,
+                                    6: true,
+                                };
+                                this.required = {
+                                    1: false,
+                                    2: false,
+                                    3: false,
+                                    4: false,
+                                    5: false,
+                                    6: false,
+                                };
+
+                                this.resetSelection();
+
+                                return;
+                            }
+
+                            this.sudokuType = 9;
+                            this.digits = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+                            this.secretSum = 45;
+                            this.allowed = {
+                                1: true,
+                                2: true,
+                                3: true,
+                                4: true,
+                                5: true,
+                                6: true,
+                                7: true,
+                                8: true,
+                                9: true,
+                            };
+                            this.required = {
+                                1: false,
+                                2: false,
+                                3: false,
+                                4: false,
+                                5: false,
+                                6: false,
+                                7: false,
+                                8: false,
+                                9: false,
+                            };
+
+                            this.resetSelection();
+                        },
+                        buttonClassType(type) {
+                            return {
+                                "bg-pink-600 hover:bg-pink-600 border-pink-800 text-white": this.sudokuType == type,
+                                "bg-white border-pink-300 text-slate-700": this.sudokuType != type,
+                            };
+                        },
+                        buttonClassCageSize(number) {
+                            return {
+                                "bg-pink-600 border-pink-800 text-white": this.cageSize == number,
+                            };
+                        },
+                        buttonClassAllowed(number) {
+                            return {
+                                "text-lime-700 border-lime-400 bg-lime-100": this.allowed[number] === true,
+                                "text-gray-300 border-gray-300 bg-white": this.allowed[number] === false,
+                            };
+                        },
+                        buttonClassRequired(number) {
+                            return {
+                                "text-lime-700 border-lime-400 bg-lime-100": this.required[number] === true,
+                                "text-gray-300 border-gray-300 bg-white": this.required[number] === false,
+                            };
+                        },
+                        toggleAllowedDigit(digit) {
+                            this.allowed[digit] = !this.allowed[digit];
+                        },
+                        toggleRequiredDigit(digit) {
+                            this.required[digit] = !this.required[digit];
+                        },
+                        showSum(sum) {
+                            if (this.zoomedSum !== null) {
+                                return this.zoomedSum === sum;
+                            }
+                            if (parseInt(this.filterSumMinimum) > 0 && parseInt(sum) < parseInt(this.filterSumMinimum)) {
+                                return false;
+                            }
+                            if (parseInt(this.filterSumMaximum) > 0 && parseInt(sum) > parseInt(this.filterSumMaximum)) {
+                                return false;
+                            }
+
+                            return true;
+                        },
+                        resetFilterSums() {
+                            this.filterSumMinimum = 1;
+                            this.filterSumMaximum = this.secretSum;
+                            this.filterSumMinimumChanged = false;
+                            this.filterSumMaximumChanged = false;
+                        },
+                        calculateFilterSumBoundaries() {
+                            let min = 45;
+                            let max = 1;
+                            for (let sum in this.combinations()) {
+                                min = Math.min(min, sum);
+                                max = Math.max(max, sum);
+                            }
+
+                            if (!this.filterSumMinimumChanged) {
+                                this.filterSumMinimum = min;
+                            }
+                            if (!this.filterSumMaximumChanged) {
+                                this.filterSumMaximum = max;
+                            }
+                        },
+                        strikeCombination(combination) {
+                            if (this.hiddenCombinations.includes(combination)) {
+                                this.hiddenCombinations = this.hiddenCombinations.filter((item) => item !== combination);
+                                return;
+                            }
+                            this.hiddenCombinations.push(combination);
+                        },
+                        zoom(sum) {
+                            if (this.zoomedSum === sum) {
+                                this.zoomedSum = null;
+                                return;
+                            }
+
+                            this.zoomedSum = sum;
+                        },
+                        getAllowedDigits() {
+                            let allowedDigits = [];
+                            for (let idx in this.allowed) {
+                                if (this.allowed[idx]) {
+                                    allowedDigits.push(parseInt(idx));
+                                }
+                            }
+
+                            return allowedDigits;
+                        },
+                        getRequiredDigits() {
+                            let requiredDigits = [];
+                            for (let idx in this.required) {
+                                if (this.required[idx]) {
+                                    requiredDigits.push(parseInt(idx));
+                                }
+                            }
+
+                            return requiredDigits;
+                        },
+                        setCageSize(size) {
+                            if (size == this.cageSize) {
+                                return;
+                            }
                             this.zoomedSum = null;
-                            return;
-                        }
-
-                        this.zoomedSum = sum;
-                    },
-                    getAllowedDigits() {
-                        let allowedDigits = [];
-                        for (let idx in this.allowed) {
-                            if (this.allowed[idx]) {
-                                allowedDigits.push(parseInt(idx));
+                            this.cageSize = size;
+                            this.calculateFilterSumBoundaries();
+                        },
+                        combinations() {
+                            let result = {};
+                            const allowedDigits = this.getAllowedDigits();
+                            const requiredDigits = this.getRequiredDigits();
+                            for (let sum = 1; sum <= this.secretSum; sum++) {
+                                let combinations = getCombinations(sum, allowedDigits);
+                                if (requiredDigits.length > 0) {
+                                    combinations = applyRequiredDigits(combinations, requiredDigits, this.requiredOperator);
+                                }
+                                combinations = filterCombinations(combinations, this.cageSize);
+                                if (combinations.length > 0) {
+                                    result[sum] = combinations;
+                                }
                             }
-                        }
 
-                        return allowedDigits;
-                    },
-                    getRequiredDigits() {
-                        let requiredDigits = [];
-                        for (let idx in this.required) {
-                            if (this.required[idx]) {
-                                requiredDigits.push(parseInt(idx));
+                            return result;
+                        },
+                        resetSelection() {
+                            this.zoomedSum = null;
+                            this.hiddenCombinations = [];
+                            this.filterSumMaximum = this.secretSum;
+                            this.filterSumMinimum = 1;
+                            this.filterSumMinimumChanged = false;
+                            this.filterSumMaximumChanged = false;
+
+                            this.cageSize = 0;
+                            for (let idx in this.allowed) {
+                                if (this.allowed.hasOwnProperty(idx)) {
+                                    this.allowed[idx] = true;
+                                }
                             }
-                        }
-
-                        return requiredDigits;
-                    },
-                    setCageSize(size) {
-                        if (size == this.cageSize) {
-                            return;
-                        }
-                        this.zoomedSum = null;
-                        this.cageSize = size;
-                    },
-                    combinations() {
-                        let result = {};
-                        const allowedDigits = this.getAllowedDigits();
-                        const requiredDigits = this.getRequiredDigits();
-                        for (let sum = 1; sum <= this.secretSum; sum++) {
-                            let combinations = getCombinations(sum, allowedDigits);
-                            if (requiredDigits.length > 0) {
-                                combinations = applyRequiredDigits(combinations, requiredDigits, this.requiredOperator);
+                            for (let idx in this.required) {
+                                if (this.required.hasOwnProperty(idx)) {
+                                    this.required[idx] = false;
+                                }
                             }
-                            combinations = filterCombinations(combinations, this.cageSize);
-                            if (combinations.length > 0) {
-                                result[sum] = combinations;
-                            }
-                        }
-
-                        return result;
-                    },
-                    resetSelection() {
-                        this.zoomedSum = null;
-                        this.hiddenCombinations = [];
-
-                        this.cageSize = 0;
-                        for (let idx in this.allowed) {
-                            if (this.allowed.hasOwnProperty(idx)) {
-                                this.allowed[idx] = true;
-                            }
-                        }
-                        for (let idx in this.required) {
-                            if (this.required.hasOwnProperty(idx)) {
-                                this.required[idx] = false;
-                            }
-                        }
-                    },
-                }))
-            })
-        </script>
-
-    </div>
-</body>
-
+                        },
+                    }));
+                });
+            </script>
+        </div>
+    </body>
 </html>
