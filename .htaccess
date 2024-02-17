@@ -1,0 +1,3 @@
+RewriteEngine On
+RewriteCond %{HTTP_HOST} ^www\.sudoku-tools\.com [NC]
+RewriteRule (.*) https://sudoku-tools.com/$1 [L]

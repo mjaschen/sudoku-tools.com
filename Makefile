@@ -6,13 +6,14 @@ watch:
 
 .PHONY: deploy
 deploy: style
-	gawk -v timestamp="$(TIMESTAMP)" '{sub(/<script src="main.js" defer><\/script>/, "<script src=\"main.js?" timestamp "\" defer><\/script>")}1' index.html > index-deploy.html
-	gawk -v timestamp="$(TIMESTAMP)" '{sub(/const cacheName = "cache-v1";/, "const cacheName = \"cache-v" timestamp "\";")}1' service-worker.js > service-worker-deploy.js
+	gawk -v timestamp="$(TIMESTAMP)" '{sub(/CACHE_BUSTER/, timestamp)}1' index.html > index-deploy.html
+	gawk -v timestamp="$(TIMESTAMP)" '{sub(/CACHE_BUSTER/, timestamp)}1' main.js > main-deploy.js
+	gawk -v timestamp="$(TIMESTAMP)" '{sub(/CACHE_BUSTER/, timestamp)}1' service-worker.js > service-worker-deploy.js
 
-	scp *.jpg *.png *.ico alpine.js browserconfig.xml manifest.json style.css sudoku-tools:public_html/
+	scp .htaccess *.jpg *.png *.ico alpine.js browserconfig.xml manifest.json style.css sudoku-tools:public_html/
 	scp impressum.html datenschutz.html sudoku-tools:public_html/
 	scp index-deploy.html sudoku-tools:public_html/index.html
-	scp main.js sudoku-tools:public_html/main.js
+	scp main-deploy.js sudoku-tools:public_html/main.js
 	scp service-worker-deploy.js sudoku-tools:public_html/service-worker.js
 
 .PHONY: style
