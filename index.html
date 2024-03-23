@@ -40,7 +40,7 @@
         <meta name="theme-color" content="#db2777" />
     </head>
     <body class="">
-        <div class="mx-auto lg:w-3/4 2xl:w-1/2" x-data="killercage">
+        <div class="mx-auto lg:w-3/4 2xl:w-1/2" x-data="killercage" @keydown.window="keyboardUpdate(event)">
             <h1 class="m-3 p-3 bg-slate-100 text-center text-2xl text-pink-600 font-bold -rotate-1 md:-rotate-[0.5deg] border-dashed border-2 border-slate-700 relative">
                 Killer Cage Calculator &amp; Sudoku&nbsp;Region&nbsp;Sums
                 <span x-text="randomSum" class="absolute top-[-3px] left-[2px] text-base text-slate-700 font-normal"></span>
@@ -59,7 +59,7 @@
             </div>
 
             <div class="mb-6">
-                <h2 class="px-3 mb-3 text-lg">Size of Killer Cage or Region Sum Segment </h2>
+                <h2 class="px-3 mb-3 text-lg">Size of Killer Cage or Region Sum Segment</h2>
                 <div class="grid justify-between w-full gap-1 px-3 mb-3 md:gap-2" :class="sudokuType == 6 ? 'grid-cols-6' : 'grid-cols-9'">
                     <template x-for="digit in digits">
                         <div class="px-2 py-2 text-xl text-center border-2 border-pink-600 rounded-xl md:rounded-full cursor-pointer basis-1/9 grow shrink-0 text-slate-700 font-bold font-mono hover:bg-pink-400 hover:text-white" @click="setCageSize(digit)" :class="buttonClassCageSize(digit)" x-text="digit"></div>
@@ -157,8 +157,29 @@
                     <a class="hover:underline" href="impressum.html">Imprint</a>
                     &centerdot;
                     <a class="hover:underline" href="datenschutz.html">Privacy</a>
+                    &centerdot;
+                    <span class="cursor-pointer hover:underline" @click="showHelp = true">Keyboard Shortcuts</span>
                 </div>
             </footer>
+
+            <div x-show="showHelp" class="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black bg-opacity-25 backdrop-blur-sm" x-cloak>
+                <!-- Modal inner -->
+                <div class="max-w-sm md:max-w-xl p-6 bg-white rounded-lg shadow-lg" @click.outside="showHelp = false">
+                    <!-- Modal content -->
+                    <div class="mb-4">
+                        <h2 class="mb-4 text-lg font-bold">Help</h2>
+                        <p class="mb-3"><kbd class="bg-gray-200 text-gray-700 font-mono text-sm p-1 rounded border border-gray-300 shadow-sm">1</kbd> … <kbd class="bg-gray-200 text-gray-700 font-mono text-sm p-1 rounded border border-gray-300 shadow-sm">9</kbd>: Set Cage Size</p>
+                        <p class="mb-3"><kbd class="bg-gray-200 text-gray-700 font-mono text-sm p-1 rounded border border-gray-300 shadow-sm">Shift</kbd> + <kbd class="bg-gray-200 text-gray-700 font-mono text-sm p-1 rounded border border-gray-300 shadow-sm">1</kbd> … <kbd class="bg-gray-200 text-gray-700 font-mono text-sm p-1 rounded border border-gray-300 shadow-sm">9</kbd>: Toggle required digits</p>
+                        <p class="mb-3"><kbd class="bg-gray-200 text-gray-700 font-mono text-sm p-1 rounded border border-gray-300 shadow-sm">Ctrl</kbd>/<kbd class="bg-gray-200 text-gray-700 font-mono text-sm p-1 rounded border border-gray-300 shadow-sm">Cmd</kbd> + <kbd class="bg-gray-200 text-gray-700 font-mono text-sm p-1 rounded border border-gray-300 shadow-sm">1</kbd> - <kbd class="bg-gray-200 text-gray-700 font-mono text-sm p-1 rounded border border-gray-300 shadow-sm">9</kbd>: Toggle allowed digits</p>
+                        <p class="mb-3"><kbd class="bg-gray-200 text-gray-700 font-mono text-sm p-1 rounded border border-gray-300 shadow-sm">Shift</kbd> + <kbd class="bg-gray-200 text-gray-700 font-mono text-sm p-1 rounded border border-gray-300 shadow-sm">Ctrl</kbd>/<kbd class="bg-gray-200 text-gray-700 font-mono text-sm p-1 rounded border border-gray-300 shadow-sm">Cmd</kbd> + <kbd class="bg-gray-200 text-gray-700 font-mono text-sm p-1 rounded border border-gray-300 shadow-sm">0</kbd>: Reset all selections</p>
+                    </div>
+                    <!-- Close button -->
+                    <div class="text-right">
+                        <button @click="showHelp = false" class="px-4 py-1 text-white bg-red-500 rounded hover:bg-red-700">Close</button>
+                    </div>
+                </div>
+            </div>
+
             <script>
                 function getCombinations(sum, digits) {
                     const results = [];
@@ -234,6 +255,7 @@
                             9: false,
                         },
                         requiredOperator: "AND", // 'OR'
+                        showHelp: false,
                         type(type) {
                             if (this.sudokuType === parseInt(type)) {
                                 return;
@@ -317,9 +339,17 @@
                             };
                         },
                         toggleAllowedDigit(digit) {
+                            if (digit === 0) {
+                                this.resetAllowedDigits();
+                                return;
+                            }
                             this.allowed[digit] = !this.allowed[digit];
                         },
                         toggleRequiredDigit(digit) {
+                            if (digit === 0) {
+                                this.resetRequiredDigits();
+                                return;
+                            }
                             this.required[digit] = !this.required[digit];
                         },
                         showSum(sum) {
@@ -391,6 +421,41 @@
 
                             return requiredDigits;
                         },
+                        keyboardUpdate(event) {
+                            console.log(event)
+                            if (event.key === '?') {
+                                this.showHelp = true;
+                                return;
+                            }
+                            if (event.key === 'Escape' && this.showHelp) {
+                                this.showHelp = false;
+                                return;
+                            }
+                            if (event.code.indexOf("Digit") === 0) {
+                                const digit = parseInt(event.code.replace("Digit", ""));
+                                const shiftKey = event.shiftKey;
+                                const ctrlKey = event.ctrlKey || event.metaKey;
+
+                                if (shiftKey && ctrlKey && digit === 0) {
+                                    this.resetSelection();
+                                    return;
+                                }
+
+                                if (shiftKey) {
+                                    this.toggleRequiredDigit(digit);
+                                    return;
+                                }
+
+                                if (ctrlKey) {
+                                    this.toggleAllowedDigit(digit);
+                                    return;
+                                }
+
+                                if (digit >= 0 && digit <= 9) {
+                                    this.setCageSize(digit);
+                                }
+                            }
+                        },
                         setCageSize(size) {
                             if (size == this.cageSize) {
                                 return;
@@ -425,11 +490,17 @@
                             this.filterSumMaximumChanged = false;
 
                             this.cageSize = 0;
+                            this.resetAllowedDigits();
+                            this.resetRequiredDigits();
+                        },
+                        resetAllowedDigits() {
                             for (let idx in this.allowed) {
                                 if (this.allowed.hasOwnProperty(idx)) {
                                     this.allowed[idx] = true;
                                 }
                             }
+                        },
+                        resetRequiredDigits() {
                             for (let idx in this.required) {
                                 if (this.required.hasOwnProperty(idx)) {
                                     this.required[idx] = false;
