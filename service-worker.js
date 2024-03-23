@@ -35,6 +35,7 @@ const precacheResources = [
 ];
 
 self.addEventListener("install", (event) => {
+    self.skipWaiting();
     event.waitUntil(
         caches.open(cacheName).then((cache) => cache.addAll(precacheResources))
     );
