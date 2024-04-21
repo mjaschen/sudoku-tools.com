@@ -112,21 +112,19 @@
 
             <div class="px-3 mb-6 overflow-x-scroll text-sm">
                 <template x-for="(digitGroups, sum) in combinations">
-                    <div class="flex gap-2 mb-1" x-show="showSum(sum)">
+                    <div class="flex gap-2 pb-1 mb-1 border-b border-b-gray-100" x-show="showSum(sum)">
                         <span class="font-bold text-right text-pink-700 basis-6 shrink-0 underline decoration-dotted" :class="zoomedSum == sum ? 'text-2xl leading-8 cursor-zoom-out' : 'cursor-zoom-in'" x-text="sum" x-on:click="zoom(sum)"></span>
-                        <span :class="zoomedSum == sum ? '' : 'border-b'">
-                            <template x-for="digits in digitGroups">
-                                <span
-                                    :class="{
-                                    'mr-3 whitespace-nowrap hover:bg-pink-200 cursor-pointer' : true,
-                                    'block text-lg' : zoomedSum == sum,
-                                    'line-through text-slate-400' : hiddenCombinations.includes(digits.join('')),
-                                }"
-                                    x-on:click="strikeCombination(digits.join(''))"
-                                    x-text="digits.join('&hairsp;')"
-                                ></span>
-                            </template>
-                        </span>
+                        <template x-for="digits in digitGroups">
+                            <span
+                                :class="{
+                                'mr-3 whitespace-nowrap hover:bg-pink-200 cursor-pointer' : true,
+                                'block text-lg' : zoomedSum == sum,
+                                'line-through text-slate-400' : hiddenCombinations.includes(digits.join('')),
+                            }"
+                                x-on:click="strikeCombination(digits.join(''))"
+                                x-html="printDigits(digits)"
+                            ></span>
+                        </template>
                     </div>
                 </template>
                 <p class="mt-4">
@@ -506,6 +504,14 @@
                                     this.required[idx] = false;
                                 }
                             }
+                        },
+                        printDigits(digits) {
+                            const markupParts = [];
+                            for (let i = 0; i < digits.length; i++) {
+                                markupParts.push(`<span class="pr-0.5 mr-0.5 font-mono">${digits[i]}</span>`);
+                            }
+
+                            return markupParts.join('');
                         },
                     }));
                 });
